@@ -1,9 +1,8 @@
 //
-//  LoginViewModel.swift
-//  MVVM-Demo
+//  AppDelegate.swift
+//  MVVM
 //
-//  Created by Hassan Mostafa on 7/25/20.
-//  Copyright © 2020 Hassan Mostafa. All rights reserved.
+//  Created by Abdulrahman on 04/04/2022.
 //
 
 import Foundation
@@ -13,57 +12,73 @@ import Alamofire
 
 class LoginViewModel {
     
-    var codeBehavior = BehaviorRelay<String>(value: "")
-    var phoneBehavior = BehaviorRelay<String>(value: "")
-    
+    var phoneBehavior   = BehaviorRelay<String>(value: "")
+    var passBehavior    = BehaviorRelay<String>(value: "")
     var loadingBehavior = BehaviorRelay<Bool>(value: false)
     
-    private var loginModelSubject = PublishSubject<LoginSuccessModel>()
+    private var loginModelSubject = PublishSubject<LoginModel>()
+    
+    var loginModelObservable: Observable<LoginModel> {
+        return loginModelSubject
+    }
     
     var isPhoneValid: Observable<Bool> {
         return phoneBehavior.asObservable().map { (phone) -> Bool in
             let isPhoneEmpty = phone.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             
-            return isPhoneEmpty
+            return !isPhoneEmpty
         }
-    }
-    var isCodeValid: Observable<Bool> {
-        return codeBehavior.asObservable().map {(code) -> Bool in
-            let isCodeEmpty = code.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            return isCodeEmpty
-        }
-    }
-    var isLoginButtonEnapled: Observable<Bool> {
-        return Observable.combineLatest(isPhoneValid, isCodeValid) { (isPhoneEmpty, isCodeEmpty) in
-            let loginValid = !isPhoneEmpty && !isCodeEmpty
-            return loginValid
-        }
-    }
-    var loginModelObservable: Observable<LoginSuccessModel> {
-        return loginModelSubject
     }
     
+    var isPassValid: Observable<Bool> {
+        return passBehavior.asObservable().map {(pass) -> Bool in
+            let isPassValid = pass.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            return !isPassValid
+        }
+    }
+    
+    
+    var isLoginButtonEnapled: Observable<Bool> {
+        return Observable.combineLatest(isPhoneValid, isPassValid) { (isPhoneValid, isPassValid) in
+            
+            return isPhoneValid && isPassValid
+        }
+    }
+    
+    
+    var coordinator: LoginCoordinator?
     
     func getData() {
         loadingBehavior.accept(true)
-        let params = [
-            "phone": phoneBehavior.value,
-            "password": codeBehavior.value,
-            "player_id": "a0fb941c-ba42-450d-9a09-4e38258f5adb"
+ 
+        
+        let info : [String:Any] = [
+            "mobile"      : phoneBehavior.value,
+            "password"    : passBehavior.value,
+            
         ]
-        let headers = ["Content-Type": "application/json"]
-        APIServices.instance.getData(url: "https://b-andsweets.com/api/login", method: .post, params: params, encoding: JSONEncoding.default, headers: headers) { [weak self](loginModel: LoginSuccessModel?, baseErrorModel: BaseErrorModel?, error) in
-            guard let self = self else { return }
+        
+        let api: AuthAPIProtocol = AuthAPI()
+        api.login(info: info) { [weak self] (result) in
+            guard let self = self else {return}
             self.loadingBehavior.accept(false)
-            if let error = error {
-                // network error
+            switch result {
+                
+            case .success(let response):
+                print(response!)
+                break
+            case .failure(let error):
                 print(error.localizedDescription)
-            } else if let baseErrorModel = baseErrorModel {
-                print(baseErrorModel.message ?? "")
-            } else {
-                guard let loginModel = loginModel else { return }
-                self.loginModelSubject.onNext(loginModel)
+                break
             }
         }
+        
+        
+        
+        
+    }
+    
+    func goToMovieList(){
+        coordinator?.startMovieList()
     }
 }

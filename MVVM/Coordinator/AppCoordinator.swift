@@ -8,14 +8,7 @@
 import UIKit
 
 
-protocol Coordinator: AnyObject	{
-    var childCoordinators : [Coordinator] {get}
-    func start()
-}
-
-final class AppCoordinator: Coordinator{
-    
-    private(set) var childCoordinators: [Coordinator] = []
+final class AppCoordinator: BaseCoordinator{
     
     private let window : UIWindow
     
@@ -23,14 +16,13 @@ final class AppCoordinator: Coordinator{
         self.window = window
     }
     
-    func start() {
+    override func start() {
         
         let navigationController = UINavigationController()
-        let eventListCoordinator = EventListCoordinator(navigationController: navigationController)
+        let loginCoordinator = LoginCoordinator(navigationController: navigationController)
+        add(coordinator: loginCoordinator)
         
-        childCoordinators.append(eventListCoordinator)
-        
-        eventListCoordinator.start()
+        loginCoordinator.start()
         
         window.rootViewController = navigationController
         window.makeKeyAndVisible()

@@ -20,7 +20,7 @@ class BaseAPI<T: TargetType> {
         AF.request(target.url, method: method, parameters: params.0, encoding: params.1, headers: headers).responseJSON { (response) in
             
             print(response)
-//            print(response.response?.statusCode)
+            //            print(response.response?.statusCode)
             
             guard let statusCode = response.response?.statusCode else {
                 // ADD Custom Error
@@ -63,19 +63,11 @@ class BaseAPI<T: TargetType> {
                     
                     let s = data["state"] as! Int
                     
-                    if "lang".locaized == "en"{
-                        let error = NSError(domain: target.url, code: s, userInfo: [NSLocalizedDescriptionKey: MyErrors.errorsEn[s]])
-                        
-                        completion(.failure(error))
-                    }else if "lang".locaized == "ar"{
-                        let error = NSError(domain: target.url, code: s, userInfo: [NSLocalizedDescriptionKey: MyErrors.errorsAr[s]])
-                        
-                        completion(.failure(error))
-                    }else{
-                        let error = NSError(domain: target.url, code: s, userInfo: [NSLocalizedDescriptionKey: MyErrors.errorsUr[s]])
-                        
-                        completion(.failure(error))
-                    }
+                    
+                    let error = NSError(domain: target.url, code: s, userInfo: [NSLocalizedDescriptionKey: MyErrors.errorsUr[s]])
+                    
+                    completion(.failure(error))
+                    
                     
                     
                     break

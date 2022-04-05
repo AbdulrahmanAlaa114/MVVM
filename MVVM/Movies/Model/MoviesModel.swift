@@ -6,3 +6,13 @@
 //
 
 import Foundation
+
+
+
+struct Movie: Codable{
+    let title: String
+    let image: String
+    let rating: Double
+    let releaseYear: Int
+    let genre: [String]
+}

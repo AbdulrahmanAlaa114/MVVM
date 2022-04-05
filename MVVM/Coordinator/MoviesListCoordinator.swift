@@ -6,3 +6,24 @@
 //
 
 import Foundation
+import UIKit
+
+
+final class MoviesListCoordinator: BaseCoordinator{
+    
+    
+    let navigationController : UINavigationController
+    
+    init(navigationController:UINavigationController) {
+        self.navigationController = navigationController
+    }
+    
+    override func start() {
+        
+        let moviesViewController = MoviesListViewController(nibName: "\(MoviesListViewController.self)", bundle: nil)
+        moviesViewController.viewModel = MoviesListViewModel()
+        navigationController.setViewControllers([moviesViewController], animated: false)
+        
+    }
+    
+}
