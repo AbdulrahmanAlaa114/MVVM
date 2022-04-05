@@ -21,8 +21,25 @@ final class MoviesListCoordinator: BaseCoordinator{
     override func start() {
         
         let moviesViewController = MoviesListViewController(nibName: "\(MoviesListViewController.self)", bundle: nil)
-        moviesViewController.viewModel = MoviesListViewModel()
+        let viewModel = MoviesListViewModel()
+        viewModel.coordinator = self
+        moviesViewController.viewModel = viewModel
         navigationController.setViewControllers([moviesViewController], animated: false)
+        
+    }
+    
+    func startMovieDetails(movie: Movie){
+        
+        let movieDetailsCoordinator = MovieDetailsCoordinator(movieDetails: movie, navigationController: navigationController)
+        movieDetailsCoordinator.parantCoordinator = self
+        add(coordinator: movieDetailsCoordinator)
+        movieDetailsCoordinator.start()
+        
+    }
+    
+    func removeMovieDetails(coordinator: BaseCoordinator){
+        
+        remove(coordinator: coordinator)
         
     }
     

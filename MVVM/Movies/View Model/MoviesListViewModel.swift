@@ -26,6 +26,8 @@ class MoviesListViewModel {
     
     var title = "Movies"
     
+    var coordinator: MoviesListCoordinator?
+    
     func viewDidLoad(){
         getData()
     }
@@ -50,9 +52,10 @@ class MoviesListViewModel {
             }
         }
         
-        
-        
-        
+    }
+    
+    func selected(movie:Movie){
+        coordinator?.startMovieDetails(movie: movie)
     }
     
     

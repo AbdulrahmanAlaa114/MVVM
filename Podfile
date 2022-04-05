@@ -10,6 +10,8 @@ target 'MVVM' do
   pod 'RxSwift'
   pod 'RxCocoa'
   pod 'CleanyModal'
+  pod 'Kingfisher'
+  
   target 'MVVMTests' do
     inherit! :search_paths
     # Pods for testing

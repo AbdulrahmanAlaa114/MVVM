@@ -55,7 +55,7 @@ class MoviesListViewController: UIViewController {
                 .rx
                 .items(cellIdentifier: movieTableViewCell,
                        cellType: MovieTableViewCell.self)) { row, movie, cell in
-                        print(row)
+                       
                         cell.textLabel?.text = movie.title
         }
         .disposed(by: disposeBag)
@@ -63,9 +63,9 @@ class MoviesListViewController: UIViewController {
     func subscribeToMoviesSelection() {
         Observable
             .zip(tableView.rx.itemSelected, tableView.rx.modelSelected(Movie.self))
-            .bind {  selectedIndex, movie in
-                
-                print(selectedIndex, movie.title )
+            .bind {[weak self]  selectedIndex, movie in
+                guard let self = self else {return}
+                self.viewModel.selected(movie: movie)
         }
         .disposed(by: disposeBag)
     }
