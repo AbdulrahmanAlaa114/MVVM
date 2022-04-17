@@ -36,6 +36,7 @@ class MoviesListViewModel {
         loadingBehavior.accept(true)
  
         let api: MoviesAPIProtocol = MoviesAPI()
+        
         api.getMovies { [weak self](result) in
             guard let self = self else {return}
             self.loadingBehavior.accept(false)

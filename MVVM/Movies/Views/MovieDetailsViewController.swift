@@ -31,6 +31,10 @@ class MovieDetailsViewController: UIViewController {
         subscribeToLoginButton()
     }
     
+    
+    
+    
+    
     func setupData(){
         
         

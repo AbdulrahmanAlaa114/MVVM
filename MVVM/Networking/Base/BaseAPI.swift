@@ -19,9 +19,6 @@ class BaseAPI<T: TargetType> {
         
         AF.request(target.url, method: method, parameters: params.0, encoding: params.1, headers: headers).responseJSON { (response) in
             
-            print(response)
-            //            print(response.response?.statusCode)
-            
             guard let statusCode = response.response?.statusCode else {
                 // ADD Custom Error
                 let error = NSError(domain: target.url, code: 0, userInfo: [NSLocalizedDescriptionKey: ErrorMessage.genericError])

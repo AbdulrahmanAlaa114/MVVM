@@ -23,6 +23,7 @@ enum Task {
     
     /// A requests body set with encoded parameters.
     case requestParameters(parameters: [String: Any], encoding: ParameterEncoding)
+    
 }
 
 protocol TargetType {
