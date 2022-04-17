@@ -55,11 +55,21 @@ class LoginViewController: UIViewController {
     }
     
     func subscribeToResponse() {
-        viewModel.loginModelObservable.subscribe(onNext: {[weak self] _ in
-            //TODO: make sure response is true
+//        viewModel.loginModelObservable.subscribe(onNext: {[weak self] _ in
+//            //TODO: make sure response is true
+//            guard let self = self else {return}
+//            self.viewModel.goToMovieList()
+//        }).disposed(by: disposeBag)
+        
+
+        viewModel.isLogin.subscribe(onNext: { [weak self] (flag) in
             guard let self = self else {return}
-            self.viewModel.goToMovieList()
+            if flag{
+                self.viewModel.goToMovieList()
+            }
         }).disposed(by: disposeBag)
+
+        
     }
     
     
@@ -68,8 +78,8 @@ class LoginViewController: UIViewController {
             .throttle(RxTimeInterval.milliseconds(500), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self](_) in
                 guard let self = self else { return }
-                self.viewModel.goToMovieList() //MARK: for test
-//                self.viewModel.getData()
+//                self.viewModel.goToMovieList() //MARK: for test
+                self.viewModel.getData()
             }).disposed(by: disposeBag)
     }
     

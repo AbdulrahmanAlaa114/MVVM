@@ -45,33 +45,49 @@ class LoginViewModel {
         }
     }
     
+    var isLogin = BehaviorRelay<Bool>(value: false)
+    
     
     var coordinator: LoginCoordinator?
     
     func getData() {
         loadingBehavior.accept(true)
  
-        
-        let info : [String:Any] = [
-            "mobile"      : phoneBehavior.value,
-            "password"    : passBehavior.value,
-            
-        ]
-        
-        let api: AuthAPIProtocol = AuthAPI()
-        api.login(info: info) { [weak self] (result) in
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: false) {[weak self] _ in
             guard let self = self else {return}
-            self.loadingBehavior.accept(false)
-            switch result {
+           
+            if self.phoneBehavior.value == "Abdo" && self.passBehavior.value == "123"{
+                self.isLogin.accept(true)
+                self.loadingBehavior.accept(false)
+            }else{
+                self.isLogin.accept(false)
+                self.loadingBehavior.accept(false)
                 
-            case .success(let response):
-                print(response!)
-                break
-            case .failure(let error):
-                print(error.localizedDescription)
-                break
             }
+            
         }
+        
+//        MARK: if network exist
+//        let info : [String:Any] = [
+//            "mobile"      : phoneBehavior.value,
+//            "password"    : passBehavior.value,
+//
+//        ]
+//
+//        let api: AuthAPIProtocol = AuthAPI()
+//        api.login(info: info) { [weak self] (result) in
+//            guard let self = self else {return}
+//            self.loadingBehavior.accept(false)
+//            switch result {
+//
+//            case .success(let response):
+//                print(response!)
+//                break
+//            case .failure(let error):
+//                print(error.localizedDescription)
+//                break
+//            }
+//        }
         
         
         
